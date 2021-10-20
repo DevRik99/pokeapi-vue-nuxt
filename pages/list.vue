@@ -6,18 +6,27 @@
           <img src="@/assets/icons/search-icon.png" alt="Search Icon" />
         </button>
         <input
+          v-model.trim="query"
           type="search"
           placeholder="Search"
           class="list-input"
-          v-model.trim="search"
           required
         />
       </div>
-      <ul class="list-container">
-        <li class="list-item">
-          Pokémon #2 <img src="@/assets/icons/fav-active.svg" alt="" />
+      <ul v-if="!error" class="list-container">
+        <li
+          v-for="({ name }, index) of pokeList"
+          :key="index"
+          class="list-item"
+        >
+          {{ name }} <img src="@/assets/icons/fav-active.svg" alt="" />
         </li>
       </ul>
+      <div v-else class="empty-list">
+        <h1 class="title">Uh-oh!</h1>
+        <p class="sub-title">You look lost on your journey!</p>
+        <PokeButton text="Go back home" to="/" />
+      </div>
     </form>
   </div>
 </template>
@@ -26,11 +35,36 @@
 export default {
   data() {
     return {
-      search: '',
+      query: '',
+      pokeList: [],
+      queryList: [],
+      error: false,
     }
   },
+  async created() {
+    await this.getPokemons()
+  },
   methods: {
-    async searchPokemon() {},
+    async searchPokemon() {
+      try {
+        const query = this.query.toLowerCase().trim()
+        const { data } = await this.$axios(`/pokemon/${query}`)
+
+        this.queryList = data
+      } catch (error) {
+        this.error = true
+      }
+    },
+    async getPokemons() {
+      try {
+        const {
+          data: { results },
+        } = await this.$axios('/pokemon')
+        this.pokeList = results
+      } catch (error) {
+        this.error = true
+      }
+    },
   },
 }
 </script>
@@ -48,8 +82,9 @@ export default {
 .search-container {
   width: 100%;
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   align-items: center;
+
   background: #ffffff;
   input,
   button {
@@ -79,6 +114,13 @@ export default {
     font-size: 22px;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0px 4px 4px 0px #00000040;
   }
+}
+.empty-list {
+  max-width: 570px;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
 }
 </style>

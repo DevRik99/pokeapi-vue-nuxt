@@ -43,7 +43,7 @@ export default {
 
   // Debido a que todas las peticiones se haran hacia una misma api se configura la baseURL
   axios: {
-    baseURL: 'https://pokeapi.co/api/v2/pokemon',
+    baseURL: 'https://pokeapi.co/api/v2',
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa

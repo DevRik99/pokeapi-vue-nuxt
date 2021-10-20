@@ -11,6 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 1rem auto;
 }
 .title {
   font-weight: bold;
@@ -35,4 +36,8 @@ body {
   font-weight: bold;
   padding: 11px 20px;
   box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+a:hover {
+  text-decoration: none;
 }
