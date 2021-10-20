@@ -1,0 +1,10 @@
+.welcome-container {
+  max-width: 570px;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  .hello-pikachu {
+    display: inline-block;
+    margin: auto;
+  }
+}
