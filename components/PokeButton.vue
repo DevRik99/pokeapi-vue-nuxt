@@ -1,6 +1,8 @@
 <template>
   <nuxt-link :to="to" class="d-inline-block">
-    <button class="poke-button">{{ text }}</button>
+    <button class="poke-button">
+      {{ text }}
+    </button>
   </nuxt-link>
 </template>
 

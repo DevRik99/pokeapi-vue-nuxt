@@ -19,7 +19,7 @@
           :key="index"
           class="list-item"
         >
-          {{ name }} <img src="@/assets/icons/fav-active.svg" alt="" />
+          {{ name }} <img src="@/assets/icons/fav-disabled.svg" alt="" />
         </li>
       </ul>
       <div v-else class="empty-list">
@@ -39,6 +39,7 @@ export default {
       pokeList: [],
       queryList: [],
       error: false,
+      loading: true,
     }
   },
   async created() {
@@ -47,11 +48,13 @@ export default {
   methods: {
     async searchPokemon() {
       try {
+        this.loading = true
         const query = this.query.toLowerCase().trim()
         const { data } = await this.$axios(`/pokemon/${query}`)
-
         this.queryList = data
+        this.loading = false
       } catch (error) {
+        this.loading = false
         this.error = true
       }
     },
@@ -61,6 +64,7 @@ export default {
           data: { results },
         } = await this.$axios('/pokemon')
         this.pokeList = results
+        this.loading = false
       } catch (error) {
         this.error = true
       }
