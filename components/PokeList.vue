@@ -57,6 +57,7 @@ export default {
   methods: {
     ...mapMutations({ togglePokemon: 'togglePokemon' }),
     async showDetails(url, favorite, pokeData) {
+      this.$nuxt.$emit('showLoading')
       try {
         const { data } = await this.$axios.get(url)
         const { height, weight, name, types, sprites } = data
@@ -70,6 +71,7 @@ export default {
         this.pokemon = pokemonData
         this.favorite = favorite
         this.showModal = true
+        this.$nuxt.$emit('hiddeLoading')
       } catch (error) {
         const { height, weight, name, types, sprites } = pokeData
         const pokemonData = {
@@ -82,6 +84,7 @@ export default {
         this.pokemon = pokemonData
         this.favorite = favorite
         this.showModal = true
+        this.$nuxt.$emit('hiddeLoading')
       }
     },
     getTypes(typesArray) {

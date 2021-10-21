@@ -18,7 +18,7 @@ export default {
     })
 
     this.$nuxt.$on('hiddeLoading', () => {
-      setTimeout(() => (this.showLoading = false), 250)
+      this.showLoading = false
     })
   },
 }
