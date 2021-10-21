@@ -1,11 +1,11 @@
 <template>
   <ul class="list-container">
     <li
-      v-for="({ name, favorite }, index) of pokeList"
+      v-for="({ name, url, favorite }, index) of pokeList"
       :key="index"
       class="list-item"
     >
-      {{ name }}
+      <span @click="showDetails(url)">{{ name }}</span>
       <img
         v-if="favorite"
         src="@/assets/icons/fav-active.svg"
@@ -34,8 +34,39 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      pokemon: {
+        height: 6,
+        name: 'charmander',
+        types: 'fire',
+        urlImagen:
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
+        weight: 85,
+      },
+    }
+  },
   methods: {
     ...mapMutations({ togglePokemon: 'togglePokemon' }),
+    async showDetails(url) {
+      const { data } = await this.$axios.get(url)
+      const { height, weight, name, sprites, types } = data
+      const pokemonData = {
+        height,
+        weight,
+        name,
+        urlImagen: sprites.other['official-artwork'].front_default,
+        types: this.getTypes(types),
+      }
+      console.log(pokemonData)
+    },
+    getTypes(typesArray) {
+      const types = []
+      for (const type of typesArray) {
+        types.push(type.type.name)
+      }
+      return types.toString()
+    },
   },
 }
 </script>

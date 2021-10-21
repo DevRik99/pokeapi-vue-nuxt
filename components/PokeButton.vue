@@ -17,7 +17,6 @@ export default {
     to: {
       default: '/',
       type: String,
-      required: true,
     },
   },
 }
