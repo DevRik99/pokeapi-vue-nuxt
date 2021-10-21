@@ -1,29 +1,34 @@
 <template>
   <ul class="list-container">
     <li
-      v-for="({ name, url, favorite }, index) of pokeList"
+      v-for="(pokeData, index) of pokeList"
       :key="index"
       class="list-item"
+      :class="{ 'drop-shadow': !pokeData.favorite }"
     >
-      <span class="cursor-pointer" @click="showDetails(url, favorite)">{{
-        name
-      }}</span>
+      <span
+        class="cursor-pointer"
+        @click="showDetails(pokeData.url, pokeData.favorite, pokeData)"
+        >{{ pokeData.name }}</span
+      >
       <img
-        v-if="favorite"
+        v-if="pokeData.favorite"
         src="@/assets/icons/fav-active.svg"
-        :alt="name"
+        :alt="pokeData.name"
         class="icon-fav"
-        @click="togglePokemon(name)"
+        @click="togglePokemon(pokeData.name)"
       />
       <img
         v-else
         src="@/assets/icons/fav-disabled.svg"
-        :alt="name"
+        :alt="pokeData.name"
         class="icon-fav"
-        @click="togglePokemon(name)"
+        @click="togglePokemon(pokeData.name)"
       />
     </li>
-    <PokeModal v-if="showModal" :pokemon="pokemon" :favorite="favorite" />
+    <transition name="fade">
+      <PokeModal v-if="showModal" :pokemon="pokemon" :favorite="favorite" />
+    </transition>
   </ul>
 </template>
 
@@ -36,6 +41,10 @@ export default {
       default: () => [],
       required: true,
       favorite: false,
+    },
+    haveData: {
+      default: false,
+      type: Boolean,
     },
   },
   data() {
@@ -51,19 +60,33 @@ export default {
   },
   methods: {
     ...mapMutations({ togglePokemon: 'togglePokemon' }),
-    async showDetails(url, favorite) {
-      const { data } = await this.$axios.get(url)
-      const { height, weight, name, sprites, types } = data
-      const pokemonData = {
-        height,
-        weight,
-        name,
-        urlImagen: sprites.other['official-artwork'].front_default,
-        types: this.getTypes(types),
+    async showDetails(url, favorite, pokeData) {
+      if (!this.haveData) {
+        const { data } = await this.$axios.get(url)
+        const { height, weight, name, types, sprites } = data
+        const pokemonData = {
+          height,
+          weight,
+          name,
+          urlImagen: sprites.other['official-artwork'].front_default,
+          types: this.getTypes(types),
+        }
+        this.pokemon = pokemonData
+        this.favorite = favorite
+        this.showModal = true
+      } else {
+        const { height, weight, name, types, sprites } = pokeData
+        const pokemonData = {
+          height,
+          weight,
+          name,
+          urlImagen: sprites.other['official-artwork'].front_default,
+          types: this.getTypes(types),
+        }
+        this.pokemon = pokemonData
+        this.favorite = favorite
+        this.showModal = true
       }
-      this.pokemon = pokemonData
-      this.favorite = favorite
-      this.showModal = true
     },
     getTypes(typesArray) {
       const types = []
@@ -96,8 +119,10 @@ export default {
     font-size: 22px;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 4px 4px 0px #00000040;
     text-transform: capitalize;
+  }
+  .drop-shadow {
+    box-shadow: 0px 4px 4px 0px #00000040;
   }
 }
 .icon-fav {

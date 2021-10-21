@@ -13,9 +13,14 @@
           required
         />
       </div>
-
-      <PokeList v-if="!error" :poke-list="pokeList" />
-      <PokeEmpty v-else> </PokeEmpty>
+      <template v-if="!error">
+        <PokeList
+          v-if="!queryList.length != 0 || !query"
+          :poke-list="pokeList"
+        />
+        <PokeList v-else :poke-list="queryList" have-data />
+      </template>
+      <PokeEmpty v-if="error"> </PokeEmpty>
     </form>
   </div>
 </template>
@@ -34,48 +39,28 @@ export default {
       return this.$store.getters.getPokemons
     },
   },
+  watch: {
+    query() {
+      if (!this.query) {
+        this.error = false
+      }
+    },
+  },
   methods: {
     async searchPokemon() {
       try {
+        this.$nuxt.$emit('showLoading')
         this.loading = true
         const query = this.query.toLowerCase().trim()
         const { data } = await this.$axios(`/pokemon/${query}`)
-        this.queryList = data
-        this.loading = false
+        this.queryList = [data]
+        this.error = false
+        this.$nuxt.$emit('hiddeLoading')
       } catch (error) {
-        this.loading = false
         this.error = true
+        this.$nuxt.$emit('hiddeLoading')
       }
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.form-list {
-  max-width: 570px;
-  width: 100%;
-  grid-template-columns: 1fr;
-  display: grid;
-  place-content: center;
-  gap: 1rem;
-  position: relative;
-}
-.search-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  background: #ffffff;
-  input,
-  button {
-    border: none;
-    background: #ffffff;
-    padding: 8px 12px;
-  }
-  input {
-    flex-grow: 1;
-  }
-}
-</style>

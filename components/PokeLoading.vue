@@ -19,6 +19,8 @@
   align-items: center;
   position: fixed;
   overflow: hidden;
+  z-index: 1;
+  background: #f9f9f9;
 }
 .pokeball {
   position: relative;

@@ -1,0 +1,27 @@
+.form-list {
+  max-width: 570px;
+  width: 100%;
+  grid-template-columns: 1fr;
+  display: grid;
+  place-content: center;
+  gap: 1rem;
+  position: relative;
+  margin: 1rem auto;
+}
+.search-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  background: #ffffff;
+  input,
+  button {
+    border: none;
+    background: #ffffff;
+    padding: 8px 12px;
+  }
+  input {
+    flex-grow: 1;
+  }
+}

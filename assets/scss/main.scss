@@ -11,7 +11,10 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1rem auto;
+  margin: auto;
+  @media (max-width: 720px) {
+    max-width: 90vw;
+  }
 }
 .title {
   font-weight: bold;

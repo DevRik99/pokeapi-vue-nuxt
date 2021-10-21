@@ -11,7 +11,6 @@
       <div class="img-container">
         <LoadingImg :src="pokemon.urlImagen" :alt="pokemon.name" />
       </div>
-
       <ul class="list-details">
         <li>
           <span class="title">Name:</span>
@@ -35,7 +34,11 @@
         </li>
       </ul>
       <div class="footer-modal">
-        <PokeButton text="Share to my Friends" />
+        <div>
+          <button type="button" class="poke-button" @click="copyToClipboard">
+            Share to my Friends
+          </button>
+        </div>
         <img
           v-if="favorite"
           src="@/assets/icons/fav-active.svg"
@@ -70,6 +73,15 @@ export default {
     closeModal() {
       this.$nuxt.$emit('closeModal', false)
     },
+    async copyToClipboard() {
+      const pokemonDescription = []
+      const pokemon = this.pokemon
+      delete pokemon.urlImagen
+      for (const key of Object.keys(pokemon)) {
+        pokemonDescription.push(`${key}: ${pokemon[key]}`)
+      }
+      await navigator.clipboard.writeText(pokemonDescription.toString())
+    },
   },
 }
 </script>
@@ -88,6 +100,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+
   .modal-details {
     width: 570px;
     height: 506px;
@@ -95,6 +108,9 @@ export default {
     border-radius: 5px;
     position: relative;
     overflow: hidden;
+    @media (max-width: 720px) {
+      max-width: 90vw;
+    }
   }
   .close-button {
     position: absolute;

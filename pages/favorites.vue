@@ -13,7 +13,10 @@
           required
         />
       </div>
-      <PokeList v-if="favList.length != 0" :poke-list="favList" />
+      <template v-if="!error">
+        <PokeList v-if="!favList.length != 0 || !query" :poke-list="favList" />
+        <PokeList v-else-if="queryList" :poke-list="queryList" have-data />
+      </template>
       <PokeEmpty v-else> </PokeEmpty>
     </form>
   </div>
@@ -24,7 +27,6 @@ export default {
   data() {
     return {
       query: '',
-      pokeList: [],
       queryList: [],
       error: false,
       loading: true,
@@ -40,52 +42,18 @@ export default {
   methods: {
     async searchPokemon() {
       try {
+        this.$nuxt.$emit('showLoading')
         this.loading = true
         const query = this.query.toLowerCase().trim()
         const { data } = await this.$axios(`/pokemon/${query}`)
-        this.queryList = data
-        this.loading = false
+        this.queryList = [data]
+        this.error = false
+        this.$nuxt.$emit('hiddeLoading')
       } catch (error) {
-        this.loading = false
         this.error = true
+        this.$nuxt.$emit('hiddeLoading')
       }
     },
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.form-list {
-  max-width: 570px;
-  width: 100%;
-  grid-template-columns: 1fr;
-  display: grid;
-  place-content: center;
-  gap: 1rem;
-  position: relative;
-}
-.search-container {
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-
-  background: #ffffff;
-  input,
-  button {
-    border: none;
-    background: #ffffff;
-    padding: 8px 12px;
-  }
-  input {
-    flex-grow: 1;
-  }
-}
-
-.empty-list {
-  max-width: 570px;
-  display: grid;
-  place-content: center;
-  gap: 1rem;
-}
-</style>

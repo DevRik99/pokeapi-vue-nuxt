@@ -1,10 +1,8 @@
 <template>
   <div>
     <PokeLoading v-if="showLoading" />
-    <template v-else>
-      <Nuxt />
-      <PokeBottomBar></PokeBottomBar>
-    </template>
+    <Nuxt />
+    <PokeBottomBar></PokeBottomBar>
   </div>
 </template>
 <script>
@@ -16,11 +14,11 @@ export default {
   },
   mounted() {
     this.$nuxt.$on('showLoading', () => {
-      console.log('showLoading')
+      this.showLoading = true
     })
 
     this.$nuxt.$on('hiddeLoading', () => {
-      console.log('hiddeLoading')
+      setTimeout(() => (this.showLoading = false), 250)
     })
   },
 }
