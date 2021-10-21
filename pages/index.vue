@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
     <div class="welcome-container">
-      <img
-        src="@/assets/images/pikachu.svg"
+      <LoadingImg
+        :src="require(`@/assets/images/pikachu.png`)"
         alt="Pikachu"
         class="hello-pikachu"
       />

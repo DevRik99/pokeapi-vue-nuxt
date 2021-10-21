@@ -78,13 +78,20 @@ export default {
       this.$nuxt.$emit('closeModal', false)
     },
     async copyToClipboard() {
-      const pokemonDescription = []
-      const pokemon = this.pokemon
-      delete pokemon.urlImagen
-      for (const key of Object.keys(pokemon)) {
-        pokemonDescription.push(`${key}: ${pokemon[key]}`)
+      try {
+        const pokemonDescription = []
+        const pokemon = this.pokemon
+        delete pokemon.urlImagen
+        for (const key of Object.keys(pokemon)) {
+          pokemonDescription.push(`${key}: ${pokemon[key]}`)
+        }
+        await navigator.clipboard.writeText(pokemonDescription.toString())
+        alert('El pokemon ahora esta en tu portapapeles')
+      } catch (error) {
+        alert(
+          'No se pudo copiar al portapapeles, al parecer no tienes la api de clipboard en tu navegador'
+        )
       }
-      await navigator.clipboard.writeText(pokemonDescription.toString())
     },
   },
 }

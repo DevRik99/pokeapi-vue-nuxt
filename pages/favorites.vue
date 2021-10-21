@@ -15,12 +15,13 @@
       </div>
       <template v-if="!error">
         <PokeList
-          v-if="!queryList.length != 0 || !query"
-          :poke-list="favList"
+          v-if="queryList.length != 0 && query"
+          :poke-list="queryList"
         />
-        <PokeList v-else :poke-list="queryList" />
+        <PokeList v-else-if="favList.length != 0" :poke-list="favList" />
+        <PokeEmpty v-else> </PokeEmpty>
       </template>
-      <PokeEmpty v-if="error || favList.length == 0"> </PokeEmpty>
+      <PokeEmpty v-else> </PokeEmpty>
     </form>
   </div>
 </template>
@@ -41,6 +42,13 @@ export default {
       return this.$store.getters.getPokemons.filter(
         (pokemon) => pokemon.favorite
       )
+    },
+  },
+  watch: {
+    query() {
+      if (!this.query) {
+        this.error = false
+      }
     },
   },
   methods: {
