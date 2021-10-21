@@ -5,7 +5,9 @@
       :key="index"
       class="list-item"
     >
-      <span @click="showDetails(url)">{{ name }}</span>
+      <span class="cursor-pointer" @click="showDetails(url, favorite)">{{
+        name
+      }}</span>
       <img
         v-if="favorite"
         src="@/assets/icons/fav-active.svg"
@@ -21,6 +23,7 @@
         @click="togglePokemon(name)"
       />
     </li>
+    <PokeModal v-if="showModal" :pokemon="pokemon" :favorite="favorite" />
   </ul>
 </template>
 
@@ -32,23 +35,23 @@ export default {
       type: Array,
       default: () => [],
       required: true,
+      favorite: false,
     },
   },
   data() {
     return {
-      pokemon: {
-        height: 6,
-        name: 'charmander',
-        types: 'fire',
-        urlImagen:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png',
-        weight: 85,
-      },
+      pokemon: '',
+      showModal: false,
     }
+  },
+  mounted() {
+    this.$nuxt.$on('closeModal', () => {
+      this.showModal = false
+    })
   },
   methods: {
     ...mapMutations({ togglePokemon: 'togglePokemon' }),
-    async showDetails(url) {
+    async showDetails(url, favorite) {
       const { data } = await this.$axios.get(url)
       const { height, weight, name, sprites, types } = data
       const pokemonData = {
@@ -58,7 +61,9 @@ export default {
         urlImagen: sprites.other['official-artwork'].front_default,
         types: this.getTypes(types),
       }
-      console.log(pokemonData)
+      this.pokemon = pokemonData
+      this.favorite = favorite
+      this.showModal = true
     },
     getTypes(typesArray) {
       const types = []

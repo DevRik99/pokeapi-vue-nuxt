@@ -2,10 +2,14 @@
   <div class="modal-container">
     <div class="modal-details">
       <div class="close-button">
-        <img src="@/assets/icons/close-button.png" alt="Close Button" />
+        <img
+          src="@/assets/icons/close-button.png"
+          alt="Close Button"
+          @click="closeModal"
+        />
       </div>
       <div class="img-container">
-        <img :src="pokemon.urlImagen" :alt="pokemon.name" />
+        <LoadingImg :src="pokemon.urlImagen" :alt="pokemon.name" />
       </div>
 
       <ul class="list-details">
@@ -33,7 +37,14 @@
       <div class="footer-modal">
         <PokeButton text="Share to my Friends" />
         <img
+          v-if="favorite"
           src="@/assets/icons/fav-active.svg"
+          :alt="pokemon.name"
+          class="icon-fav"
+        />
+        <img
+          v-else
+          src="@/assets/icons/fav-disabled.svg"
           :alt="pokemon.name"
           class="icon-fav"
         />
@@ -45,14 +56,19 @@
 <script>
 export default {
   props: {
-    showModal: {
-      default: false,
-      type: Boolean,
-    },
     pokemon: {
-      type: {},
-      default: () => {},
+      type: Object,
+      default: () => ({}),
       required: true,
+    },
+    favorite: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  methods: {
+    closeModal() {
+      this.$nuxt.$emit('closeModal', false)
     },
   },
 }
