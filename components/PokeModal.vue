@@ -35,7 +35,11 @@
       </ul>
       <div class="footer-modal">
         <div>
-          <button type="button" class="poke-button" @click="copyToClipboard">
+          <button
+            type="button"
+            class="poke-button active"
+            @click="copyToClipboard"
+          >
             Share to my Friends
           </button>
         </div>
@@ -125,7 +129,9 @@ export default {
     justify-content: center;
     align-items: center;
     background-image: url('@/assets/images/poke-background.png');
-    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-repeat: repeat;
+    animation: animateBackground 60s alternate infinite;
     img {
       width: 180px;
       height: 180px;
@@ -150,6 +156,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+}
+@keyframes animateBackground {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 1000px 0;
   }
 }
 </style>

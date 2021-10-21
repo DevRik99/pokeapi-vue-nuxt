@@ -14,6 +14,14 @@ export const mutations = {
       }
     }
   },
+  addPokemon: (state, payload) => {
+    const name = payload.name
+    const exist = state.pokemons.find((pokemon) => pokemon.name === name)
+    if (!exist) {
+      payload.favorite = false
+      state.pokemons.push(payload)
+    }
+  },
   updatePokemons: (state, payload) => {
     state.pokemons = payload
   },

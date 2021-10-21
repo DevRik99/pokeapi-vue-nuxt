@@ -18,7 +18,7 @@
           v-if="!queryList.length != 0 || !query"
           :poke-list="pokeList"
         />
-        <PokeList v-else :poke-list="queryList" have-data />
+        <PokeList v-else :poke-list="queryList" />
       </template>
       <PokeEmpty v-if="error"> </PokeEmpty>
     </form>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   data() {
     return {
@@ -47,13 +48,17 @@ export default {
     },
   },
   methods: {
+    ...mapMutations({ addPokemon: 'addPokemon' }),
     async searchPokemon() {
       try {
         this.$nuxt.$emit('showLoading')
         this.loading = true
         const query = this.query.toLowerCase().trim()
         const { data } = await this.$axios(`/pokemon/${query}`)
-        this.queryList = [data]
+        this.addPokemon(data)
+        this.queryList = this.$store.getters.getPokemons.filter(
+          (pokemon) => pokemon.name === data.name
+        )
         this.error = false
         this.$nuxt.$emit('hiddeLoading')
       } catch (error) {

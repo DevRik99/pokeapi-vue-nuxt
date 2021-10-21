@@ -42,10 +42,6 @@ export default {
       required: true,
       favorite: false,
     },
-    haveData: {
-      default: false,
-      type: Boolean,
-    },
   },
   data() {
     return {
@@ -61,7 +57,7 @@ export default {
   methods: {
     ...mapMutations({ togglePokemon: 'togglePokemon' }),
     async showDetails(url, favorite, pokeData) {
-      if (!this.haveData) {
+      try {
         const { data } = await this.$axios.get(url)
         const { height, weight, name, types, sprites } = data
         const pokemonData = {
@@ -74,7 +70,7 @@ export default {
         this.pokemon = pokemonData
         this.favorite = favorite
         this.showModal = true
-      } else {
+      } catch (error) {
         const { height, weight, name, types, sprites } = pokeData
         const pokemonData = {
           height,
